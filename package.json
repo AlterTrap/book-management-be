@@ -1,0 +1,16 @@
+{
+  "name": "book-management-be",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon -r dotenv/config index.js",
+    "db:create": ".\\node_modules\\.bin\\db-migrate db:create --config src/config/database.json"
+  },
+  "dependencies": {
+    "db-migrate": "^0.11.13",
+    "db-migrate-mysql": "^2.2.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.1"
+  }
+}
