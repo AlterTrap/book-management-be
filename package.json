@@ -4,13 +4,25 @@
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon -r dotenv/config index.js",
-    "db:create": ".\\node_modules\\.bin\\db-migrate db:create --config src/config/database.json"
+    "db:create": "npx db-migrate db:create --config src/config/database.json",
+    "migrate:create": "npx db-migrate create --config src/config/database.json -m src/migrations",
+    "migrate:up": "npx db-migrate up --config src/config/database.json -m src/migrations",
+    "migrate:down": "npx db-migrate down --config src/config/database.json -m src/migrations",
+    "db:seed:name": "npx sequelize-cli db:seed --config src/config/config.json --seeders-path src/utils/seeders --seed",
+    "db:seed:all": "npx sequelize-cli db:seed:all --config src/config/config.json --seeders-path src/utils/seeders",
+    "sequelize:init": "npx sequelize init --config src/config/config.json --models-path src/models --seeders-path src/utils/seed"
   },
   "dependencies": {
     "db-migrate": "^0.11.13",
     "db-migrate-mysql": "^2.2.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "nodemon": "^3.0.1"
+    "mysql2": "^3.6.0",
+    "nodemon": "^3.0.1",
+    "sequelize": "^6.32.1"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "sequelize-cli": "^6.6.1"
   }
 }

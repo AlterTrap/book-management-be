@@ -4,6 +4,7 @@ const exampleRouter = require("./src/routes/example");
 
 const port = 3000;
 
+app.use(express.json());
 app.use("/api/examples", exampleRouter);
 
 app.listen(port, () => {
