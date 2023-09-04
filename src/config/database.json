@@ -4,6 +4,6 @@
     "user": { "ENV": "DEV_DB_USERNAME" },
     "password": { "ENV": "DEV_DB_PASSWORD" },
     "multipleStatements": true,
-    "database": "book-management"
+    "database": { "ENV": "DEV_DB_NAME" }
   }
 }

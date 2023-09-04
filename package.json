@@ -8,9 +8,9 @@
     "migrate:create": "npx db-migrate create --config src/config/database.json -m src/migrations",
     "migrate:up": "npx db-migrate up --config src/config/database.json -m src/migrations",
     "migrate:down": "npx db-migrate down --config src/config/database.json -m src/migrations",
-    "db:seed:name": "npx sequelize-cli db:seed --config src/config/config.json --seeders-path src/utils/seeders --seed",
-    "db:seed:all": "npx sequelize-cli db:seed:all --config src/config/config.json --seeders-path src/utils/seeders",
-    "sequelize:init": "npx sequelize init --config src/config/config.json --models-path src/models --seeders-path src/utils/seed"
+    "db:seed:name": "npx sequelize-cli db:seed --config src/config/config.js --seeders-path src/utils/seeders --seed",
+    "db:seed:all": "npx sequelize-cli db:seed:all --config src/config/config.js --seeders-path src/utils/seeders",
+    "sequelize:init": "npx sequelize init --config src/config/config.js --models-path src/models --seeders-path src/utils/seed"
   },
   "dependencies": {
     "db-migrate": "^0.11.13",
