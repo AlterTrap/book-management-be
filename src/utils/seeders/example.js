@@ -1,8 +1,8 @@
-const { faker } = require('@faker-js/faker');
+const { faker } = require("@faker-js/faker");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Examples', [
+    return queryInterface.bulkInsert("Examples", [
       {
         name: faker.internet.displayName(),
         createdAt: new Date(),
@@ -11,6 +11,6 @@ module.exports = {
     ]);
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Users', null, {});
+    return queryInterface.bulkDelete("Examples", null, {});
   },
 };

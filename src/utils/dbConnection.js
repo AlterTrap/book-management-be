@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 
 let sequelize = null;
 
@@ -11,7 +11,8 @@ const getConnection = () => {
     process.env.DEV_DB_PASSWORD,
     {
       host: process.env.HOST,
-      dialect: 'mysql',
+      dialect: "mysql",
+      timezone: "+07:00",
     }
   );
 

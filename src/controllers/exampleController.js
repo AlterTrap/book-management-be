@@ -1,13 +1,15 @@
-const { Example } = require('../models/example');
+const { Example } = require("../models/example");
 
 const find = async (req, res) => {
   const examples = await Example.findAll();
 
   if (!examples || !examples.length) {
-    return res.json('There are no example');
+    return res.json("There are no example");
   }
 
-  const name = examples.map((e) => e.name).join(', ');
+  const name = examples.map((e) => e.name).join(", ");
+
+  console.log(name);
 
   return res.json(`List example: ${name}`);
 };
@@ -15,7 +17,7 @@ const find = async (req, res) => {
 const create = async (req, res) => {
   const { name } = req.body;
 
-  if (!name || name.trim() === '') return res.json('Invalid name');
+  if (!name || name.trim() === "") return res.json("Invalid name");
 
   const example = await Example.create({
     name,
@@ -28,19 +30,20 @@ const update = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.json('invalid request');
+    return res.json("invalid request");
   }
 
   const example = await Example.findByPk(id);
 
-  if (!example) return res.status(404).json('Not found');
+  if (!example) return res.status(404).json("Not found");
 
-  const { name } = req.body;
+  const { name, createdAt } = req.body;
 
-  if (!name || name.trim() === '')
-    return res.status(422).json('Name cannot be empty');
+  if (!name || name.trim() === "")
+    return res.status(422).json("Name cannot be empty");
 
   example.name = name;
+  example.createdAt = createdAt;
   await example.save();
 
   return res.json(example);
@@ -50,19 +53,19 @@ const destroy = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.json('invalid request');
+    return res.json("invalid request");
   }
 
   try {
     const example = await Example.findByPk(id);
 
-    if (!example) return res.status(404).json('Not found');
+    if (!example) return res.status(404).json("Not found");
 
     await example.destroy();
     return res.status(204).json();
   } catch (e) {
-    console.log('🚀 ~ Error: ', e);
-    return res.status(500).json('Server error');
+    console.log("🚀 ~ Error: ", e);
+    return res.status(500).json("Server error");
   }
 };
 

@@ -1,7 +1,7 @@
-const { connection } = require('../utils/dbConnection');
-const { DataTypes } = require('sequelize');
+const { connection } = require("../utils/dbConnection");
+const { DataTypes } = require("sequelize");
 
-const Example = connection.define('Example', {
+const Example = connection.define("Example", {
   name: {
     type: DataTypes.STRING,
   },
