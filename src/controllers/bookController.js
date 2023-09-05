@@ -1,13 +1,13 @@
-const { Book } = require("../models/book");
+const { Book } = require('../models/book');
 
 const find = async (req, res) => {
   const book = await Book.findAll();
 
   if (!book || !book.length) {
-    return res.json("No book");
+    return res.json('No book');
   }
 
-  const name = book.map((e) => e.name).join(", ");
+  const name = book.map((e) => e.name).join(', ');
 
   return res.json(`List book: ${name}`);
 };
@@ -15,13 +15,13 @@ const find = async (req, res) => {
 const create = async (req, res) => {
   const { name, id, category } = req.body;
 
-  if (isNaN(id)) return res.json("Invalid");
-  if (category === "") return res.json("Plz input category");
-  if (!name || name.trim() === "") return res.json("Invalid name");
+  if (isNaN(id)) return res.json('Invalid');
+  if (category === '') return res.json('Plz input category');
+  if (!name || name.trim() === '') return res.json('Invalid name');
 
   const existBook = await Book.findOne({ where: { name: name } });
 
-  if (existBook) return res.json("already exist");
+  if (existBook) return res.json('already exist');
 
   const book = await Book.create({
     name,
@@ -35,17 +35,17 @@ const update = async (req, res) => {
   const { id } = req.params;
 
   if (!id) {
-    return res.json("invalid request");
+    return res.json('invalid request');
   }
 
   const book = await Book.findByPk(id);
 
-  if (!book) return res.status(404).json("Not found");
+  if (!book) return res.status(404).json('Not found');
 
   const { name, createdAt, category } = req.body;
 
-  if (!name || name.trim() === "")
-    return res.status(422).json("Name cannot be empty");
+  if (!name || name.trim() === '')
+    return res.status(422).json('Name cannot be empty');
 
   await Book.update(
     { name: name, createdAt: new Date(createdAt), category: category },
@@ -60,19 +60,19 @@ const update = async (req, res) => {
 const destroy = async (req, res) => {
   const { id } = req.params;
   if (!id) {
-    return res.json("invalid request");
+    return res.json('invalid request');
   }
 
   try {
     const book = await Book.findByPk(id);
 
-    if (!book) return res.status(404).json("Not found");
+    if (!book) return res.status(404).json('Not found');
 
     await book.destroy();
     return res.status(204).json();
   } catch (e) {
-    console.log("🚀 ~ Error: ", e);
-    return res.status(500).json("Server error");
+    console.log('🚀 ~ Error: ', e);
+    return res.status(500).json('Server error');
   }
 };
 

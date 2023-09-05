@@ -7,7 +7,7 @@ const port = 3000;
 
 app.use(express.json());
 
-app.use("/api/book", bookRouter);
+app.use("/api/books", bookRouter);
 app.use("/api/examples", exampleRouter);
 
 app.listen(port, () => {

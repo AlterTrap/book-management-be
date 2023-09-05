@@ -1,8 +1,8 @@
-const { connection } = require("../utils/dbConnection");
-const { DataTypes } = require("sequelize");
+const { connection } = require('../utils/dbConnection');
+const { DataTypes } = require('sequelize');
 
 const Book = connection.define(
-  "Book",
+  'Book',
   {
     name: {
       type: DataTypes.STRING,
@@ -18,7 +18,6 @@ const Book = connection.define(
     },
   },
   {
-    tableName: "book",
     timestamps: true,
   }
 );

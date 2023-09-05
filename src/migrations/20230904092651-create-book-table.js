@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var dbm;
 var type;
@@ -15,23 +15,23 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable("book", {
-    id: { type: "bigint", primaryKey: true, autoIncrement: true },
-    name: { type: "string", unique: true, notNull: true },
-    category: "string",
+  return db.createTable('books', {
+    id: { type: 'bigint', primaryKey: true, autoIncrement: true },
+    name: { type: 'string', unique: true, notNull: true },
+    category: 'string',
     createdAt: {
-      type: "datetime",
-      defaultValue: "CURRENT_TIMESTAMP",
+      type: 'datetime',
+      defaultValue: 'CURRENT_TIMESTAMP',
     },
     updatedAt: {
-      type: "datetime",
-      defaultValue: "CURRENT_TIMESTAMP",
+      type: 'datetime',
+      defaultValue: 'CURRENT_TIMESTAMP',
     },
   });
 };
 
 exports.down = function (db) {
-  return db.dropTable("book");
+  return db.dropTable('book');
 };
 
 exports._meta = {
