@@ -10,11 +10,9 @@ const Book = connection.define(
     category: DataTypes.STRING,
     createdAt: {
       type: DataTypes.DATE,
-      // defaultValue: DataTypes.literal("CURRENT_TIMESTAMP"),
     },
     updatedAt: {
       type: DataTypes.DATE,
-      // defaultValue: DataTypes.literal("CURRENT_TIMESTAMP"),
     },
   },
   {
