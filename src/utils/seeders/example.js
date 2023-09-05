@@ -11,6 +11,10 @@ module.exports = {
     ]);
   },
   down: (queryInterface, Sequelize) => {
+<<<<<<< HEAD
     return queryInterface.bulkDelete("Examples", null, {});
+=======
+    return queryInterface.bulkDelete('Examples', null, {});
+>>>>>>> main
   },
 };
