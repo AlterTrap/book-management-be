@@ -14,8 +14,10 @@ const find = async (req, res) => {
 
 const create = async (req, res) => {
   const { name, id, category } = req.body;
-
-  if (isNaN(id)) return res.json('Invalid');
+  if (id === undefined) {
+    checkedId = '';
+  }
+  if (isNaN(checkedId)) return res.json('Invalid');
   if (category === '') return res.json('Plz input category');
   if (!name || name.trim() === '') return res.json('Invalid name');
 
@@ -47,10 +49,29 @@ const update = async (req, res) => {
   if (!name || name.trim() === '')
     return res.status(422).json('Name cannot be empty');
 
-  await Book.update(
-    { name: name, createdAt: new Date(createdAt), category: category },
-    { where: { id: id }, returning: true }
-  );
+  const existBook = await Book.findOne({ where: { name: name } });
+
+  if (existBook) {
+    return res.json('Book already exist check and use other name');
+  }
+  if (createdAt === undefined) {
+    await Book.update(
+      {
+        name: name,
+        category: category,
+      },
+      { where: { id: id } }
+    );
+  } else {
+    await Book.update(
+      {
+        name: name,
+        createdAt: new Date(createdAt),
+        category: category,
+      },
+      { where: { id: id } }
+    );
+  }
 
   const updatedData = await Book.findByPk(id);
 
