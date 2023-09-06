@@ -14,12 +14,14 @@ const find = async (req, res) => {
 
 const create = async (req, res) => {
   const { name, id, category } = req.body;
-  if (id === undefined) {
-    checkedId = '';
+  const checkedId = '';
+  if (id === undefined || id === '') {
+    checkedId;
   }
   if (isNaN(checkedId)) return res.json('Invalid');
-  if (category === '') return res.json('Plz input category');
   if (!name || name.trim() === '') return res.json('Invalid name');
+  if (category === '' || category === undefined)
+    return res.json('Plz input category');
 
   const existBook = await Book.findOne({ where: { name: name } });
 
@@ -36,7 +38,9 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
+  console.log(id);
+
+  if (!id || isNaN(id)) {
     return res.json('invalid request');
   }
 
@@ -51,10 +55,12 @@ const update = async (req, res) => {
 
   const existBook = await Book.findOne({ where: { name: name } });
 
+  if (category.trim() === '') return res.status(422).json('Plz Input Category');
+
   if (existBook) {
     return res.json('Book already exist check and use other name');
   }
-  if (createdAt === undefined) {
+  if (createdAt === undefined || createdAt === '') {
     await Book.update(
       {
         name: name,
@@ -80,7 +86,7 @@ const update = async (req, res) => {
 
 const destroy = async (req, res) => {
   const { id } = req.params;
-  if (!id) {
+  if (!id || isNaN(id)) {
     return res.json('invalid request');
   }
 
