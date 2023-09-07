@@ -1,17 +1,19 @@
 const nameNotEmpty = (val) => {
-  if (!val || val.trim() === '') return true;
+  if (!val || val.trim() === '') return false;
+  return true;
 };
 
 const isNotFind = (val) => {
-  if (!books || !books.length) return true;
+  if (!val || !val.length) return true;
 };
 
 const cateNotEmpty = (val) => {
-  if (category.trim() === '' || category === undefined) return true;
+  if (!val || val.trim() === '') return false;
+  return true;
 };
 
 const validID = (val) => {
-  if (!id || isNaN(id)) return true;
+  if (!val || isNaN(val)) return true;
 };
 
 module.exports = { nameNotEmpty, isNotFind, cateNotEmpty, validID };

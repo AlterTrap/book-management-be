@@ -1,5 +1,6 @@
+const dataTypes = require('sequelize/lib/data-types');
 const { connection } = require('../utils/dbConnection');
-const { DataTypes } = require('sequelize');
+const { DataTypes, Sequelize } = require('sequelize');
 
 const Book = connection.define(
   'Book',

@@ -8,6 +8,9 @@ const validID = require('../utils/validation/bookValidation').validID;
 
 const find = async (req, res) => {
   const { name, category, createdAt } = req.query;
+  const dayWithin = createdAt === undefined ? new Date(createdAt) : new Date();
+  const limit = new Date(dayWithin);
+  limit.setDate(dayWithin.getDate() + 1);
 
   if (
     (!name && !category && !createdAt) ||
@@ -26,7 +29,14 @@ const find = async (req, res) => {
         [Sequelize.Op.or]: [
           { name: { [Sequelize.Op.like]: `%${name}%` } },
           { category: { [Sequelize.Op.like]: `%${category}%` } },
-          { createdAt: { [Sequelize.Op.like]: `%${new Date(createdAt)}%` } },
+          {
+            createdAt: {
+              [Sequelize.Op.and]: [
+                { [Sequelize.Op.gte]: dayWithin },
+                { [Sequelize.Op.lt]: limit },
+              ],
+            },
+          },
         ],
       },
     });
@@ -42,9 +52,9 @@ const find = async (req, res) => {
 const create = async (req, res) => {
   const { name, category } = req.body;
 
-  if (nameNotEmpty(name)) return res.json('Invalid name');
+  if (!nameNotEmpty(name)) return res.json('Invalid name');
 
-  if (cateNotEmpty(category)) return res.json('Plz input category');
+  if (!cateNotEmpty(category)) return res.json('Plz input category');
 
   const existBook = await Book.findOne({ where: { name: name } });
   if (existBook) return res.json('already exist');
@@ -69,9 +79,10 @@ const update = async (req, res) => {
 
   if (!book) return res.status(404).json('Not found');
 
-  if (nameNotEmpty(name)) return res.status(422).json('Name cannot be empty');
+  if (!nameNotEmpty(name)) return res.status(422).json('Name cannot be empty');
 
-  if (cateNotEmpty(category)) return res.status(422).json('Plz Input Category');
+  if (!cateNotEmpty(category))
+    return res.status(422).json('Plz Input Category');
 
   const existBook = await Book.findOne({ where: { name: name } });
   if (existBook) {
