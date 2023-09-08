@@ -1,63 +1,64 @@
 const { Book } = require('../models/book');
 const { Sequelize } = require('sequelize');
 
-const nameNotEmpty = require('../utils/validation/bookValidation').nameNotEmpty;
+const isNameNotEmpty =
+  require('../utils/validation/bookValidation').isNameNotEmpty;
 const isNotFind = require('../utils/validation/bookValidation').isNotFind;
-const cateNotEmpty = require('../utils/validation/bookValidation').cateNotEmpty;
-const validID = require('../utils/validation/bookValidation').validID;
+const isCateNotEmpty =
+  require('../utils/validation/bookValidation').isCateNotEmpty;
+const isValidID = require('../utils/validation/bookValidation').isValidID;
+const isValidDate = require('../utils/validation/bookValidation').isValidDate;
 
 const find = async (req, res) => {
-  const { name, category, createdAt } = req.query;
-  const dayWithin = createdAt === undefined ? new Date(createdAt) : new Date();
+  const { name = '', category = '', createdAt } = req.query;
+  const dayWithin = new Date(createdAt);
   const limit = new Date(dayWithin);
+  const opts = { where: { [Sequelize.Op.and]: [] } };
+
   limit.setDate(dayWithin.getDate() + 1);
 
-  if (
-    (!name && !category && !createdAt) ||
-    (name && category && createdAt === '')
-  ) {
-    const books = await Book.findAll();
+  if (isNameNotEmpty(name)) {
+    opts.where[Sequelize.Op.and].push({
+      name: { [Sequelize.Op.like]: `%${name}%` },
+    });
+  }
 
-    if (isNotFind(books)) {
-      return res.json('No book');
-    }
+  if (isCateNotEmpty(category)) {
+    opts.where[Sequelize.Op.and].push({
+      category: { [Sequelize.Op.like]: `%${category}%` },
+    });
+  }
 
-    return res.json(books);
-  } else {
-    const finedBooks = await Book.findAll({
-      where: {
-        [Sequelize.Op.or]: [
-          { name: { [Sequelize.Op.like]: `%${name}%` } },
-          { category: { [Sequelize.Op.like]: `%${category}%` } },
-          {
-            createdAt: {
-              [Sequelize.Op.and]: [
-                { [Sequelize.Op.gte]: dayWithin },
-                { [Sequelize.Op.lt]: limit },
-              ],
-            },
-          },
+  if (isValidDate(createdAt)) {
+    opts.where[Sequelize.Op.and].push({
+      createdAt: {
+        [Sequelize.Op.and]: [
+          { [Sequelize.Op.gte]: dayWithin },
+          { [Sequelize.Op.lt]: limit },
         ],
       },
     });
-
-    if (isNotFind(finedBooks)) {
-      return res.json('No book to find');
-    }
-
-    return res.json(finedBooks);
   }
+
+  const finedBooks = await Book.findAll(opts);
+
+  if (isNotFind(finedBooks)) {
+    return res.status(404).json('No book to find');
+  }
+
+  return res.json(finedBooks);
 };
 
 const create = async (req, res) => {
   const { name, category } = req.body;
 
-  if (!nameNotEmpty(name)) return res.json('Invalid name');
+  if (!isNameNotEmpty(name)) return res.status(400).json('Invalid name');
 
-  if (!cateNotEmpty(category)) return res.json('Plz input category');
+  if (!isCateNotEmpty(category))
+    return res.status(400).json('Plz input category');
 
   const existBook = await Book.findOne({ where: { name: name } });
-  if (existBook) return res.json('already exist');
+  if (existBook) return res.status(409).json(name + ' already exist');
 
   const book = await Book.create({
     name,
@@ -71,7 +72,7 @@ const update = async (req, res) => {
   const { id } = req.params;
   const { name, category } = req.body;
 
-  if (validID(id)) {
+  if (isValidID(id)) {
     return res.json('invalid request');
   }
 
@@ -79,14 +80,17 @@ const update = async (req, res) => {
 
   if (!book) return res.status(404).json('Not found');
 
-  if (!nameNotEmpty(name)) return res.status(422).json('Name cannot be empty');
+  if (!isNameNotEmpty(name))
+    return res.status(400).json('Name cannot be empty');
 
-  if (!cateNotEmpty(category))
-    return res.status(422).json('Plz Input Category');
+  if (!isCateNotEmpty(category))
+    return res.status(400).json('Plz Input Category');
 
   const existBook = await Book.findOne({ where: { name: name } });
   if (existBook) {
-    return res.json('Book already exist check and use other name');
+    return res
+      .status(409)
+      .json('Book ' + name + ' already exist check and use other name');
   }
 
   await Book.update(
@@ -99,13 +103,13 @@ const update = async (req, res) => {
 
   const updatedData = await Book.findByPk(id);
 
-  return res.json(updatedData);
+  return res.status(200).json(updatedData);
 };
 
 const destroy = async (req, res) => {
   const { id } = req.params;
-  if (validID(id)) {
-    return res.json('invalid request');
+  if (isValidID(id)) {
+    return res.status(400).json('invalid request');
   }
 
   try {
