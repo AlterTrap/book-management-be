@@ -9,6 +9,8 @@ const find = async (req, res) => {
 
   const name = examples.map((e) => e.name).join(', ');
 
+  console.log(name);
+
   return res.json(`List example: ${name}`);
 };
 
@@ -35,12 +37,13 @@ const update = async (req, res) => {
 
   if (!example) return res.status(404).json('Not found');
 
-  const { name } = req.body;
+  const { name, createdAt } = req.body;
 
   if (!name || name.trim() === '')
     return res.status(422).json('Name cannot be empty');
 
   example.name = name;
+  example.createdAt = createdAt;
   await example.save();
 
   return res.json(example);
