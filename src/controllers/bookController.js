@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 
 const {
   isNotEmpty,
-  isEmpty,
+  isArrayEmpty,
   isValidID,
   isValidDate,
 } = require('../utils/validation/validation');
@@ -41,7 +41,7 @@ const find = async (req, res) => {
 
   const foundBook = await Book.findAll(opts);
 
-  if (isEmpty(foundBook)) {
+  if (isArrayEmpty(foundBook)) {
     return res.status(404).json();
   }
 
