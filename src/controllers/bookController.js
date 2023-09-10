@@ -3,7 +3,7 @@ const { Sequelize } = require('sequelize');
 
 const {
   isNotEmpty,
-  isNotFind,
+  isEmpty,
   isValidID,
   isValidDate,
 } = require('../utils/validation/validation');
@@ -39,13 +39,13 @@ const find = async (req, res) => {
     });
   }
 
-  const findedBooks = await Book.findAll(opts);
+  const foundBook = await Book.findAll(opts);
 
-  if (isNotFind(findedBooks)) {
+  if (isEmpty(foundBook)) {
     return res.status(404).json();
   }
 
-  return res.json(findedBooks);
+  return res.json(foundBook);
 };
 
 const create = async (req, res) => {
@@ -72,7 +72,7 @@ const update = async (req, res) => {
   const updatedVal = {};
 
   if (isValidID(id)) {
-    return res.json('invalid request');
+    return res.status(400).json('invalid request');
   }
 
   const book = await Book.findByPk(id);

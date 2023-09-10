@@ -3,7 +3,7 @@ const isNotEmpty = (val) => {
   return true;
 };
 
-const isNotFind = (val) => {
+const isEmpty = (val) => {
   if (!val || !val.length) return true;
 };
 
@@ -18,7 +18,7 @@ const isValidDate = (val) => {
 
 module.exports = {
   isNotEmpty,
-  isNotFind,
+  isEmpty,
   isValidID,
   isValidDate,
 };
