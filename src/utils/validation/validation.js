@@ -1,15 +1,10 @@
-const isNameNotEmpty = (val) => {
-  if (!val || val.trim() === '') return false;
+const isNotEmpty = (val) => {
+  if (val === undefined || !val || val.trim() === '') return false;
   return true;
 };
 
-const isNotFind = (val) => {
+const isArrayEmpty = (val) => {
   if (!val || !val.length) return true;
-};
-
-const isCateNotEmpty = (val) => {
-  if (!val || val.trim() === '') return false;
-  return true;
 };
 
 const isValidID = (val) => {
@@ -22,9 +17,8 @@ const isValidDate = (val) => {
 };
 
 module.exports = {
-  isNameNotEmpty,
-  isNotFind,
-  isCateNotEmpty,
+  isNotEmpty,
+  isArrayEmpty,
   isValidID,
   isValidDate,
 };
