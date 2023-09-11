@@ -7,11 +7,7 @@ const find = async (req, res) => {
     return res.json('There are no example');
   }
 
-  const name = examples.map((e) => e.name).join(', ');
-
-  console.log(name);
-
-  return res.json(`List example: ${name}`);
+  return res.json(examples);
 };
 
 const create = async (req, res) => {

@@ -1,15 +1,17 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const exampleRouter = require("./src/routes/example");
-const bookRouter = require("./src/routes/book");
+const exampleRouter = require('./src/routes/example');
+const bookRouter = require('./src/routes/book');
+const cors = require('cors');
 
 const port = 3000;
 
 app.use(express.json());
+app.use(cors());
 
-app.use("/api/books", bookRouter);
-app.use("/api/examples", exampleRouter);
+app.use('/api/books', bookRouter);
+app.use('/api/examples', exampleRouter);
 
 app.listen(port, () => {
-  console.log("Book Management on 3000");
+  console.log('Book Management on 3000');
 });
