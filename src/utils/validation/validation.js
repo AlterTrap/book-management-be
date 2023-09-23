@@ -8,7 +8,8 @@ const isArrayEmpty = (val) => {
 };
 
 const isValidID = (val) => {
-  if (!val || isNaN(val)) return true;
+  if (isNaN(val)) return false;
+  return true;
 };
 
 const isValidDate = (val) => {

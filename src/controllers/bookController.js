@@ -9,12 +9,18 @@ const {
 } = require('../utils/validation/validation');
 
 const find = async (req, res) => {
-  const { name, category, createdAt } = req.query;
+  const { name, category, createdAt, id } = req.query;
   const dayWithin = new Date(createdAt);
   const limit = new Date(dayWithin);
   const opts = { where: { [Sequelize.Op.and]: [] } };
 
   limit.setDate(dayWithin.getDate() + 1);
+
+  if (isValidID(id)) {
+    opts.where[Sequelize.Op.and].push({
+      id: { [Sequelize.Op.like]: `${id}` },
+    });
+  }
 
   if (isNotEmpty(name)) {
     opts.where[Sequelize.Op.and].push({
@@ -71,13 +77,15 @@ const update = async (req, res) => {
   const { name, category } = req.body;
   const updatedVal = {};
 
-  if (isValidID(id)) {
+  if (!isValidID(id)) {
     return res.status(400).json('invalid request');
   }
 
-  const book = await Book.findByPk(id);
+  const bookData = await Book.findByPk(id);
 
-  if (!book) return res.status(404).json();
+  if (!bookData) {
+    return res.status(404).json();
+  }
 
   if (isNotEmpty(name)) {
     const existBook = await Book.findOne({ where: { name } });
@@ -100,7 +108,7 @@ const update = async (req, res) => {
 
 const destroy = async (req, res) => {
   const { id } = req.params;
-  if (isValidID(id)) {
+  if (!isValidID(id)) {
     return res.status(400).json('invalid request');
   }
 
