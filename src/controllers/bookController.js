@@ -10,11 +10,11 @@ const {
 
 const find = async (req, res) => {
   const { name, category, createdAt, id } = req.query;
-  const dayWithin = new Date(createdAt);
-  const limit = new Date(dayWithin);
+  const dayFrom = new Date(createdAt);
+  const dayTo = new Date(dayFrom);
   const opts = { where: { [Sequelize.Op.and]: [] } };
 
-  limit.setDate(dayWithin.getDate() + 1);
+  dayTo.setDate(dayFrom.getDate() + 1);
 
   if (isValidID(id)) {
     opts.where[Sequelize.Op.and].push({
@@ -38,8 +38,8 @@ const find = async (req, res) => {
     opts.where[Sequelize.Op.and].push({
       createdAt: {
         [Sequelize.Op.and]: [
-          { [Sequelize.Op.gte]: dayWithin },
-          { [Sequelize.Op.lt]: limit },
+          { [Sequelize.Op.gte]: dayFrom },
+          { [Sequelize.Op.lt]: dayTo },
         ],
       },
     });
@@ -84,13 +84,10 @@ const update = async (req, res) => {
   const book = await Book.findByPk(id);
 
   if (!book) return res.status(404).json();
-  if (!book) {
-    return res.status(404).json();
-  }
 
   if (isNotEmpty(name)) {
-    const existBook = await Book.findOne({ where: { name } });
-    if (existBook && String(existBook.id) !== String(id)) {
+    const foundBook = await Book.findOne({ where: { name } });
+    if (foundBook && String(foundBook.id) !== String(id)) {
       return res.status(409).json(`Book ${name} already exist`);
     }
     updatedVal.name = name;
