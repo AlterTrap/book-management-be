@@ -19,6 +19,14 @@ exports.up = function (db) {
     id: { type: 'bigint', primaryKey: true, autoIncrement: true },
     name: { type: 'string', unique: true, notNull: true },
     category: 'string',
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Users',
+        key: 'id',
+      },
+    },
     createdAt: {
       type: 'datetime',
       defaultValue: 'CURRENT_TIMESTAMP',
