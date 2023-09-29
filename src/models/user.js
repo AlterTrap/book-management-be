@@ -1,15 +1,17 @@
 const dataTypes = require('sequelize/lib/data-types');
 const { connection } = require('../utils/dbConnection');
 const { DataTypes, Sequelize } = require('sequelize');
-const User = require('../models/user');
 
 const Book = connection.define(
   'Book',
   {
-    name: {
+    username: {
       type: DataTypes.STRING,
     },
-    category: DataTypes.STRING,
+    password: DataTypes.STRING,
+    name: DataTypes.STRING,
+    age: DataTypes.STRING,
+    address: DataTypes.STRING,
     createdAt: {
       type: DataTypes.DATE,
     },
@@ -21,8 +23,5 @@ const Book = connection.define(
     timestamps: true,
   }
 );
-
-User.hasMany(Book, { as: 'books', foreignKey: 'userId' });
-Book.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = { Book };
