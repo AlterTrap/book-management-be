@@ -20,7 +20,7 @@ exports.up = function (db) {
     name: { type: 'string', unique: true, notNull: true },
     category: 'string',
     userId: {
-      type: 'bigint',
+      type: Sequelize.INTEGER,
       allowNull: false,
       references: {
         model: 'Users',
