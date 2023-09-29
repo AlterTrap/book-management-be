@@ -19,7 +19,9 @@ exports.up = function (db) {
     id: { type: 'bigint', primaryKey: true, autoIncrement: true },
     username: { type: 'string', unique: true, notNull: true },
     password: { type: 'string', unique: true, notNull: true },
-    name: { type: 'string', notNull: true },
+    name: 'string',
+    address: 'string',
+    age: 'string',
     createdAt: {
       type: 'datetime',
       defaultValue: 'CURRENT_TIMESTAMP',
