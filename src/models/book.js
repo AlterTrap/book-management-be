@@ -6,23 +6,17 @@ const User = require('../models/user');
 const Book = connection.define(
   'Book',
   {
-    name: {
-      type: DataTypes.STRING,
-    },
+    name: DataTypes.STRING,
     category: DataTypes.STRING,
-    createdAt: {
-      type: DataTypes.DATE,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-    },
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
   },
   {
     timestamps: true,
   }
 );
 
-User.hasMany(Book, { as: 'books', foreignKey: 'userId' });
-Book.belongsTo(User, { foreignKey: 'userId' });
+// User.hasMany(Book, { as: 'books', foreignKey: 'userId' });
+// Book.belongsTo(User, { foreignKey: 'userId' });
 
 module.exports = { Book };

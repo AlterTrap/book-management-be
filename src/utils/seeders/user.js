@@ -6,7 +6,7 @@ module.exports = {
     return queryInterface.bulkInsert('Users', [
       {
         username: faker.internet.userName(),
-        category: await bcrypt.hash(faker.internet.password(), 10),
+        password: await bcrypt.hash(faker.internet.password(), 10),
         name: faker.lorem.words(3),
         createdAt: new Date(),
         updatedAt: new Date(),

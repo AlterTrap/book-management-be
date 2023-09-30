@@ -13,6 +13,7 @@
     "sequelize:init": "npx sequelize init --config src/config/config.js --models-path src/models --seeders-path src/utils/seed"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "db-migrate": "^0.11.13",
     "db-migrate-mysql": "^2.2.0",

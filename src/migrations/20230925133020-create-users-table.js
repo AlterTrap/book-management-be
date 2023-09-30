@@ -1,8 +1,8 @@
 'use strict';
 
-var dbm;
-var type;
-var seed;
+let dbm;
+let type;
+let seed;
 
 /**
  * We receive the dbmigrate dependency from dbmigrate initially.
@@ -21,7 +21,7 @@ exports.up = function (db) {
     password: { type: 'string', unique: true, notNull: true },
     name: 'string',
     address: 'string',
-    age: 'string',
+    age: 'int',
     createdAt: {
       type: 'datetime',
       defaultValue: 'CURRENT_TIMESTAMP',
