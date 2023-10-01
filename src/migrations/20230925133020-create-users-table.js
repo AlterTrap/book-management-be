@@ -15,10 +15,13 @@ exports.setup = function (options, seedLink) {
 };
 
 exports.up = function (db) {
-  return db.createTable('books', {
+  return db.createTable('users', {
     id: { type: 'bigint', primaryKey: true, autoIncrement: true },
-    name: { type: 'string', unique: true, notNull: true },
-    category: 'string',
+    username: { type: 'string', unique: true, notNull: true },
+    password: { type: 'string', unique: true, notNull: true },
+    name: 'string',
+    address: 'string',
+    age: 'int',
     createdAt: {
       type: 'datetime',
       defaultValue: 'CURRENT_TIMESTAMP',
@@ -31,7 +34,7 @@ exports.up = function (db) {
 };
 
 exports.down = function (db) {
-  return db.dropTable('books');
+  return db.dropTable('users');
 };
 
 exports._meta = {

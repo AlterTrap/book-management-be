@@ -10,6 +10,7 @@ module.exports = {
         category: 'novel',
         createdAt: new Date(),
         updatedAt: new Date(),
+        userId: 1,
       });
     }
 

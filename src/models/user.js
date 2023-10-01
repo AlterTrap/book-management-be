@@ -2,11 +2,14 @@ const dataTypes = require('sequelize/lib/data-types');
 const { connection } = require('../utils/dbConnection');
 const { DataTypes, Sequelize } = require('sequelize');
 
-const Book = connection.define(
-  'Book',
+const User = connection.define(
+  'User',
   {
+    username: DataTypes.STRING,
+    password: DataTypes.STRING,
     name: DataTypes.STRING,
-    category: DataTypes.STRING,
+    age: DataTypes.NUMBER,
+    address: DataTypes.STRING,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,
   },
@@ -15,4 +18,4 @@ const Book = connection.define(
   }
 );
 
-module.exports = { Book };
+module.exports = { User };
