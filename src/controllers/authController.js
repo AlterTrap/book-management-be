@@ -3,15 +3,15 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 
 const {
-  checkLength,
+  isEnoughLength,
   isOneUpscalePass,
 } = require('../utils/validation/validation');
 
 const register = async (req, res) => {
   const { username, password, passwordCfm } = req.body;
-  const checkUsername = checkLength(username);
-  const checkPassword = checkLength(password);
-  const checkPasswordCfm = checkLength(passwordCfm);
+  const checkUsername = isEnoughLength(username);
+  const checkPassword = isEnoughLength(password);
+  const checkPasswordCfm = isEnoughLength(passwordCfm);
   const checkUps = isOneUpscalePass(password);
 
   if (!checkUsername) {
@@ -34,10 +34,12 @@ const register = async (req, res) => {
   if (password == passwordCfm) {
     const foundUser = await User.findOne({ where: { username } });
     if (foundUser) return res.status(409).json(`${username} already exist`);
+
     const user = await User.create({
       username,
       password: await bcrypt.hash(password, 10),
     });
+
     passport.authenticate('local')(req, res, function () {
       return res.status(201).json(req.isAuthenticated());
     });
@@ -48,29 +50,20 @@ const register = async (req, res) => {
 
 const login = (req, res, next) => {
   const { username, password } = req.body;
-  const checkUsername = checkLength(username);
-  const CheckPassword = checkLength(password);
+  const checkUsername = isEnoughLength(username);
+  const CheckPassword = isEnoughLength(password);
   const checkUps = isOneUpscalePass(password);
 
   if (!checkUsername) {
-    return res.render('login', {
-      usernameholder: username,
-      msg: 'Username not enough 6 letters',
-    });
+    return res.status(400).json('Username Not enough 6 letters');
   }
 
   if (!CheckPassword) {
-    return res.render('login', {
-      usernameholder: username,
-      msg: 'Password not enough 6 letters',
-    });
+    return res.status(400).json('Passsword Not enough 6 letters');
   }
 
   if (checkUps) {
-    return res.render('login', {
-      usernameholder: username,
-      msg: 'Password require 1 upscale letter',
-    });
+    return res.status(400).json('Password require 1 upscale letter');
   }
 
   passport.authenticate('local', (err, user, info) => {

@@ -41,12 +41,9 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser(async (user, done) => {
-  await userData.findOne(
-    { where: { username: user.username } },
-    (err, user) => {
-      return done(err, user);
-    }
-  );
+  await User.findOne({ where: { username: user.username } }, (err, user) => {
+    return done(err, user);
+  });
 });
 
 module.exports = passport;

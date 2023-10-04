@@ -16,9 +16,9 @@ const isValidDate = (val) => {
   if (!isNaN(myDate.getTime())) return true;
 };
 
-const checkLength = (val) => {
+const isEnoughLength = (val) => {
   // Check length in Username, Password and Password Comfirm
-  if (val.length >= 6) {
+  if (val !== undefined && val.length >= 6) {
     return true;
   }
   return false;
@@ -26,7 +26,7 @@ const checkLength = (val) => {
 
 const isOneUpscalePass = (val) => {
   // Check if there is a uppscale letter in password
-  if (val.search(/[A-Z]/) < 0) {
+  if (val !== undefined && val.search(/[A-Z]/) < 0) {
     return true;
   }
   return false;
@@ -37,6 +37,6 @@ module.exports = {
   isArrayEmpty,
   isValidID,
   isValidDate,
-  checkLength,
+  isEnoughLength,
   isOneUpscalePass,
 };
