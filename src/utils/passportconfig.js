@@ -36,7 +36,6 @@ passport.serializeUser((user, done) => {
   return done(null, {
     id: user._id,
     username: user.username,
-    role_flg: user.role_flg,
   });
 });
 
