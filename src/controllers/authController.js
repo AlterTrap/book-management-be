@@ -14,11 +14,11 @@ const register = async (req, res) => {
     password: await bcrypt.hash(password, 10),
   });
 
-  const getUserData = { ...user.get() };
-  delete getUserData.password;
+  const userData = { ...user.get() };
+  delete userData.password;
 
   passport.authenticate('local')(req, res, async () => {
-    return res.status(201).json(getUserData);
+    return res.status(201).json(userData);
   });
 };
 
