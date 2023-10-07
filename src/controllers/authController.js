@@ -9,14 +9,16 @@ const register = async (req, res) => {
   const foundUser = await User.findOne({ where: { username } });
   if (foundUser) return res.status(409).json(`${username} already exist`);
 
-  await User.create({
+  const user = await User.create({
     username,
     password: await bcrypt.hash(password, 10),
   });
 
+  const getUserData = { ...user.get() };
+  delete getUserData.password;
+
   passport.authenticate('local')(req, res, async () => {
-    const getUser = await User.findOne({ where: { username } });
-    return res.status(201).json(getUser);
+    return res.status(201).json(getUserData);
   });
 };
 

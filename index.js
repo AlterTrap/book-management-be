@@ -13,7 +13,7 @@ const port = 3000;
 
 app.use(
   session({
-    secret: 'mysupersecrect',
+    secret: process.env.DEV_DB_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 3600000 },

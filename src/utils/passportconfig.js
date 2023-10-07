@@ -30,9 +30,6 @@ passport.use(
 );
 
 passport.serializeUser((user, done) => {
-  console.log(
-    'Inside serializeUser callback. User id is save to the session file store here'
-  );
   return done(null, {
     id: user._id,
     username: user.username,

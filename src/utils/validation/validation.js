@@ -39,18 +39,18 @@ const userRegistrationSchema = z
     username: z
       .string({ required_error: 'Username required' })
       .min(6, { message: 'Username not enough 6 letters' })
-      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'Username is Valid' }),
+      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'Username is invalid' }),
     password: z
       .string({ required_error: 'Password required' })
       .min(6, { message: 'Password not enough 6 letters' })
-      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password is Valid' })
+      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password is invalid' })
       .regex(new RegExp('.*[A-Z].*'), {
         message: 'Password require 1 upscale letter',
       }),
     passwordCfm: z
       .string({ required_error: 'Password confirm required' })
       .min(6, { message: 'Password confirm not enough 6 letters' })
-      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password confirm is Valid' })
+      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password confirm is invalid' })
       .regex(new RegExp('.*[A-Z].*'), {
         message: 'Password confirm require 1 upscale letter',
       }),
@@ -63,11 +63,11 @@ const userLoginSchema = z.object({
   username: z
     .string({ required_error: 'Username required' })
     .min(6, { message: 'Username not enough 6 letters' })
-    .regex(/^[a-zA-Z0-9_-]+$/, { message: 'Username is Valid' }),
+    .regex(/^[a-zA-Z0-9_-]+$/, { message: 'Username is invalid' }),
   password: z
     .string({ required_error: 'Password required' })
     .min(6, { message: 'Password not enough 6 letters' })
-    .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password is Valid' })
+    .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password is invalid' })
     .regex(new RegExp('.*[A-Z].*'), {
       message: 'Password require 1 upscale letter',
     }),
