@@ -1,44 +1,46 @@
 const { User } = require('../models/user');
 const bcrypt = require('bcrypt');
-const passport = require('passport');
+const passport = require('../utils/passportJwtConfig');
+const jwt = require('jsonwebtoken');
+const secret = process.env.JWT_SECRET;
 
 const register = async (req, res) => {
   const { username, password } = req.body;
+  const existingUser = await User.findOne({ where: { username } });
 
-  // Check password and password comfirm
-  const foundUser = await User.findOne({ where: { username } });
-  if (foundUser) return res.status(409).json(`${username} already exist`);
+  if (existingUser) {
+    return res.status(409).json(`${username} already exist`);
+  }
 
-  const user = await User.create({
+  const newUser = await User.create({
     username,
     password: await bcrypt.hash(password, 10),
   });
 
-  const userData = { ...user.get() };
-  delete userData.password;
+  const token = jwt.sign(
+    { id: newUser.id, username: newUser.username },
+    secret
+  );
 
-  passport.authenticate('local')(req, res, async () => {
-    return res.status(201).json(userData);
-  });
+  return res.json({ token });
 };
 
-const login = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+const login = async (req, res, next) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ where: { username } });
+
+  bcrypt.compare(password, user.password, (err, isMatch) => {
     if (err) {
-      return next(err);
+      return res.status(401).json({ message: 'Authentication failed' });
     }
-    if (!user) {
-      // Display message
-      msg = info.message;
-      return res.status(500).json(msg);
+
+    if (isMatch) {
+      const token = jwt.sign({ id: user.id, username: user.username }, secret);
+      return res.json({ token });
+    } else {
+      return res.status(401).json({ message: 'Authentication failed' });
     }
-    req.logIn(user, function (err) {
-      if (err) {
-        return next(err);
-      }
-      return res.status(201).json(user);
-    });
-  })(req, res, next);
+  });
 };
 
 module.exports = {
