@@ -6,8 +6,8 @@ const register = async (req, res) => {
   const { username, password } = req.body;
 
   // Check password and password comfirm
-  const existingUser = await User.findOne({ where: { username } });
-  if (existingUser) return res.status(409).json(`${username} already exist`);
+  const foundUser = await User.findOne({ where: { username } });
+  if (foundUser) return res.status(409).json(`${username} already exist`);
 
   const user = await User.create({
     username,
@@ -19,9 +19,9 @@ const register = async (req, res) => {
 
   const token = jwt.sign(
     { id: userData.id, username: userData.username },
-    process.env.TOKEN_KEY,
+    process.env.JWT_SECRET,
     {
-      expiresIn: '1h',
+      expiresIn: process.env.JWT_SECRET,
     }
   );
 
@@ -43,17 +43,17 @@ const login = async (req, res, next) => {
 
     const token = jwt.sign(
       { id: userData.id, username: userData.username },
-      process.env.TOKEN_KEY,
+      process.env.JWT_SECRET,
       {
-        expiresIn: '1h',
+        expiresIn: process.env.JWT_SECRET,
       }
     );
 
     userData.token = token;
 
-    return res.status(201).json(userData);
+    return res.status(200).json(userData);
   } else {
-    return res.status(409).send('Password is not right');
+    return res.status(409).send('Username or password is incorrect.');
   }
 };
 

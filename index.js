@@ -5,7 +5,6 @@ const app = express();
 const exampleRouter = require('./src/routes/example');
 const bookRouter = require('./src/routes/book');
 const authRouter = require('./src/routes/auth');
-const userRouter = require('./src/routes/user');
 const cors = require('cors');
 
 const port = 3000;

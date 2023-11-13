@@ -3,14 +3,14 @@ const router = express.Router();
 const bookController = require('../controllers/bookController');
 const passport = require('passport');
 
-const requireAuth = passport.authenticate('jwt', { session: false });
+const authMiddleware = passport.authenticate('jwt', { session: false });
 
-router.get('/', requireAuth, (req, res) => bookController.find(req, res));
-router.post('/', requireAuth, (req, res) => bookController.create(req, res));
-router.patch('/:id', requireAuth, (req, res) =>
+router.get('/', authMiddleware, (req, res) => bookController.find(req, res));
+router.post('/', authMiddleware, (req, res) => bookController.create(req, res));
+router.patch('/:id', authMiddleware, (req, res) =>
   bookController.update(req, res)
 );
-router.delete('/:id', requireAuth, (req, res) =>
+router.delete('/:id', authMiddleware, (req, res) =>
   bookController.destroy(req, res)
 );
 
