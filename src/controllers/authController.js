@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { User } = require('../models/user');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -21,7 +22,7 @@ const register = async (req, res) => {
     { id: userData.id, username: userData.username },
     process.env.JWT_SECRET,
     {
-      expiresIn: process.env.JWT_SECRET,
+      expiresIn: process.env.TIME_EXPIRE,
     }
   );
 
@@ -45,7 +46,7 @@ const login = async (req, res, next) => {
       { id: userData.id, username: userData.username },
       process.env.JWT_SECRET,
       {
-        expiresIn: process.env.JWT_SECRET,
+        expiresIn: process.env.TIME_EXPIRE,
       }
     );
 
