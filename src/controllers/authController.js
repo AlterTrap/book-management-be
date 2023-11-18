@@ -53,7 +53,7 @@ const login = async (req, res, next) => {
 
     return res.status(200).json(userData);
   } else {
-    return res.status(409).send('Username or password is incorrect.');
+    return res.status(409).json('Username or password is incorrect.');
   }
 };
 
