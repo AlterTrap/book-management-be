@@ -14,5 +14,4 @@ router.post('/register', validateUserRegistration, (req, res) =>
 router.post('/login', validateUserLogin, (req, res) =>
   authController.login(req, res)
 );
-
 module.exports = router;

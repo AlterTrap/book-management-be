@@ -1,6 +1,6 @@
 const { User } = require('../models/user');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const passport = require('passport');
 
 const register = async (req, res) => {
   const { username, password } = req.body;
@@ -17,28 +17,44 @@ const register = async (req, res) => {
   const userData = { ...user.get() };
   delete userData.password;
 
-  passport.authenticate('local')(req, res, async () => {
-    return res.status(201).json(userData);
-  });
+  const token = jwt.sign(
+    { id: userData.id, username: userData.username },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.TIME_EXPIRE,
+    }
+  );
+
+  userData.token = token;
+
+  return res.status(201).json(userData);
 };
 
-const login = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      // Display message
-      msg = info.message;
-      return res.status(500).json(msg);
-    }
-    req.logIn(user, function (err) {
-      if (err) {
-        return next(err);
+const login = async (req, res, next) => {
+  const { username, password } = req.body;
+
+  // Check password and password comfirm
+  const foundUser = await User.findOne({ where: { username } });
+  if (!foundUser) return res.status(409).json(`${username} not exist`);
+
+  if (foundUser && (await bcrypt.compare(password, foundUser.password))) {
+    const userData = { ...foundUser.get() };
+    delete userData.password;
+
+    const token = jwt.sign(
+      { id: userData.id, username: userData.username },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.TIME_EXPIRE,
       }
-      return res.status(201).json(user);
-    });
-  })(req, res, next);
+    );
+
+    userData.token = token;
+
+    return res.status(200).json(userData);
+  } else {
+    return res.status(409).json('Username or password is incorrect.');
+  }
 };
 
 module.exports = {
