@@ -36,42 +36,70 @@ const isOneUpscalePass = (val) => {
 
 const userRegistrationSchema = z
   .object({
-    username: z
-      .string({ required_error: 'Username required' })
-      .min(6, { message: 'Username not enough 6 letters' })
-      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'Username is invalid' }),
-    password: z
-      .string({ required_error: 'Password required' })
-      .min(6, { message: 'Password not enough 6 letters' })
-      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password is invalid' })
-      .regex(new RegExp('.*[A-Z].*'), {
-        message: 'Password require 1 upscale letter',
-      }),
-    passwordCfm: z
-      .string({ required_error: 'Password confirm required' })
-      .min(6, { message: 'Password confirm not enough 6 letters' })
-      .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password confirm is invalid' })
-      .regex(new RegExp('.*[A-Z].*'), {
-        message: 'Password confirm require 1 upscale letter',
-      }),
+    username: z.string(),
+    password: z.string(),
+    passwordCfm: z.string(),
   })
   .refine((data) => data.password === data.passwordCfm, {
     message: 'Password and Password Confirm do not match',
-  });
+  })
+  .refine((data) => /^[a-zA-Z0-9]{6,}$/.test(data.username), {
+    message:
+      'Username must have at least 6 characters and without special character',
+    path: ['username'],
+  })
+  .refine(
+    (data) =>
+      data.password.length >= 6 &&
+      /[A-Z]/.test(data.password) &&
+      /^[a-zA-Z0-9]+$/.test(data.password),
+    {
+      message:
+        'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
+      path: ['password'],
+    }
+  )
+  .refine((data) => data.password === data.passwordCfm, {
+    message: 'Password and Password Confirm do not match',
+  })
+  .refine((data) => /^[a-zA-Z0-9]{6,}$/.test(data.username), {
+    message:
+      'Username must have at least 6 characters and without special character',
+    path: ['username'],
+  })
+  .refine(
+    (data) =>
+      data.passwordCfm.length >= 6 &&
+      /[A-Z]/.test(data.passwordCfm) &&
+      /^[a-zA-Z0-9]+$/.test(data.password.Cfm),
+    {
+      message:
+        'Password confirm must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
+      path: ['passwordCfm'],
+    }
+  );
 
-const userLoginSchema = z.object({
-  username: z
-    .string({ required_error: 'Username required' })
-    .min(6, { message: 'Username not enough 6 letters' })
-    .regex(/^[a-zA-Z0-9_-]+$/, { message: 'Username is invalid' }),
-  password: z
-    .string({ required_error: 'Password required' })
-    .min(6, { message: 'Password not enough 6 letters' })
-    .regex(/^[a-zA-Z0-9_-]+$/, { message: 'password is invalid' })
-    .regex(new RegExp('.*[A-Z].*'), {
-      message: 'Password require 1 upscale letter',
-    }),
-});
+const userLoginSchema = z
+  .object({
+    username: z.string(),
+    password: z.string(),
+  })
+  .refine((data) => /^[a-zA-Z0-9]{6,}$/.test(data.username), {
+    message:
+      'Username must have at least 6 characters and without special character',
+    path: ['username'],
+  })
+  .refine(
+    (data) =>
+      data.password.length >= 6 &&
+      /[A-Z]/.test(data.password) &&
+      /^[a-zA-Z0-9]+$/.test(data.password),
+    {
+      message:
+        'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
+      path: ['password'],
+    }
+  );
 
 module.exports = {
   isNotEmpty,
