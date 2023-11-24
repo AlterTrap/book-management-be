@@ -48,17 +48,11 @@ const userRegistrationSchema = z
       'Username must have at least 6 characters and without special character',
     path: ['username'],
   })
-  .refine(
-    (data) =>
-      data.password.length >= 6 &&
-      /[A-Z]/.test(data.password) &&
-      /^[a-zA-Z0-9]+$/.test(data.password),
-    {
-      message:
-        'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
-      path: ['password'],
-    }
-  )
+  .refine((data) => /^(?=.*[A-Z])[a-zA-Z0-9]{6,}$/.test(data.password), {
+    message:
+      'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
+    path: ['password'],
+  })
   .refine((data) => data.password === data.passwordCfm, {
     message: 'Password and Password Confirm do not match',
   })
@@ -67,17 +61,11 @@ const userRegistrationSchema = z
       'Username must have at least 6 characters and without special character',
     path: ['username'],
   })
-  .refine(
-    (data) =>
-      data.passwordCfm.length >= 6 &&
-      /[A-Z]/.test(data.passwordCfm) &&
-      /^[a-zA-Z0-9]+$/.test(data.password.Cfm),
-    {
-      message:
-        'Password confirm must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
-      path: ['passwordCfm'],
-    }
-  );
+  .refine((data) => /^(?=.*[A-Z])[a-zA-Z0-9]{6,}$/.test(data.passwordCfm), {
+    message:
+      'Password confirm must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
+    path: ['passwordCfm'],
+  });
 
 const userLoginSchema = z
   .object({
@@ -89,17 +77,11 @@ const userLoginSchema = z
       'Username must have at least 6 characters and without special character',
     path: ['username'],
   })
-  .refine(
-    (data) =>
-      data.password.length >= 6 &&
-      /[A-Z]/.test(data.password) &&
-      /^[a-zA-Z0-9]+$/.test(data.password),
-    {
-      message:
-        'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
-      path: ['password'],
-    }
-  );
+  .refine((data) => /^(?=.*[A-Z])[a-zA-Z0-9]{6,}$/.test(data.password), {
+    message:
+      'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
+    path: ['password'],
+  });
 
 module.exports = {
   isNotEmpty,
