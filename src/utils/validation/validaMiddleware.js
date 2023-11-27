@@ -11,7 +11,7 @@ const parseError = (error) => {
       validationErrors[field] = errorMessage;
     });
   } else {
-    return error;
+    return res.status(500).json({ msg: 'Server Error' });
   }
 
   return validationErrors;
