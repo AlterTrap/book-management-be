@@ -58,6 +58,7 @@ const userRegistrationSchema = z
   })
   .refine((data) => data.password === data.passwordCfm, {
     message: 'Password and Password Confirm do not match',
+    path: ['undefined'],
   })
   .refine((data) => usernameRegex.test(data.username), {
     message:
