@@ -10,6 +10,8 @@ const parseError = (error) => {
       const errorMessage = issue.message;
       validationErrors[field] = errorMessage;
     });
+  } else {
+    return error;
   }
 
   return validationErrors;

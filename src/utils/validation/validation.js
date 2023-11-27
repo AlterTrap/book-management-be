@@ -34,6 +34,9 @@ const isOneUpscalePass = (val) => {
   return false;
 };
 
+const usernameRegex = /^[a-zA-Z0-9]{6,}$/;
+const passwordRegex = /^(?=.*[A-Z])[a-zA-Z0-9]{6,}$/;
+
 const userRegistrationSchema = z
   .object({
     username: z.string(),
@@ -43,12 +46,12 @@ const userRegistrationSchema = z
   .refine((data) => data.password === data.passwordCfm, {
     message: 'Password and Password Confirm do not match',
   })
-  .refine((data) => /^[a-zA-Z0-9]{6,}$/.test(data.username), {
+  .refine((data) => usernameRegex.test(data.username), {
     message:
       'Username must have at least 6 characters and without special character',
     path: ['username'],
   })
-  .refine((data) => /^(?=.*[A-Z])[a-zA-Z0-9]{6,}$/.test(data.password), {
+  .refine((data) => passwordRegex.test(data.password), {
     message:
       'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
     path: ['password'],
@@ -56,12 +59,12 @@ const userRegistrationSchema = z
   .refine((data) => data.password === data.passwordCfm, {
     message: 'Password and Password Confirm do not match',
   })
-  .refine((data) => /^[a-zA-Z0-9]{6,}$/.test(data.username), {
+  .refine((data) => usernameRegex.test(data.username), {
     message:
       'Username must have at least 6 characters and without special character',
     path: ['username'],
   })
-  .refine((data) => /^(?=.*[A-Z])[a-zA-Z0-9]{6,}$/.test(data.passwordCfm), {
+  .refine((data) => passwordRegex.test(data.passwordCfm), {
     message:
       'Password confirm must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
     path: ['passwordCfm'],
@@ -72,12 +75,12 @@ const userLoginSchema = z
     username: z.string(),
     password: z.string(),
   })
-  .refine((data) => /^[a-zA-Z0-9]{6,}$/.test(data.username), {
+  .refine((data) => usernameRegex.test(data.username), {
     message:
       'Username must have at least 6 characters and without special character',
     path: ['username'],
   })
-  .refine((data) => /^(?=.*[A-Z])[a-zA-Z0-9]{6,}$/.test(data.password), {
+  .refine((data) => passwordRegex.test(data.password), {
     message:
       'Password must be at least 6 characters, contain at least 1 uppercase letter and no special characters',
     path: ['password'],
