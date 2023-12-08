@@ -13,6 +13,10 @@ const find = async (req, res) => {
   const dayFrom = new Date(createdAt);
   const dayTo = new Date(dayFrom);
   const opts = { where: { [Sequelize.Op.and]: [] } };
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = 5;
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
 
   dayTo.setDate(dayFrom.getDate() + 1);
 
@@ -20,38 +24,58 @@ const find = async (req, res) => {
     opts.where[Sequelize.Op.and].push({
       id: id,
     });
-  }
 
-  if (isNotEmpty(name)) {
-    opts.where[Sequelize.Op.and].push({
-      name: { [Sequelize.Op.like]: `%${name}%` },
+    const singleBook = await Book.findByPk(id);
+    if (singleBook) {
+      return res.json({
+        list: [singleBook],
+        currentPage: page,
+        totalPages: 1,
+      });
+    }
+  } else {
+    if (isNotEmpty(name)) {
+      opts.where[Sequelize.Op.and].push({
+        name: { [Sequelize.Op.like]: `%${name}%` },
+      });
+    }
+
+    if (isNotEmpty(category)) {
+      opts.where[Sequelize.Op.and].push({
+        category: { [Sequelize.Op.like]: `%${category}%` },
+      });
+    }
+
+    if (isValidDate(createdAt)) {
+      opts.where[Sequelize.Op.and].push({
+        createdAt: {
+          [Sequelize.Op.and]: [
+            { [Sequelize.Op.gte]: dayFrom },
+            { [Sequelize.Op.lt]: dayTo },
+          ],
+        },
+      });
+    }
+
+    const result = await Book.findAndCountAll({
+      where: opts,
+      limit: pageSize,
+      offset: startIndex,
+    });
+
+    if (result.count === 0) {
+      return res.status(404).json();
+    }
+
+    const { count, rows } = result;
+    const totalPages = Math.ceil(count / pageSize);
+
+    return res.json({
+      list: rows,
+      currentPage: page,
+      totalPages: totalPages,
     });
   }
-
-  if (isNotEmpty(category)) {
-    opts.where[Sequelize.Op.and].push({
-      category: { [Sequelize.Op.like]: `%${category}%` },
-    });
-  }
-
-  if (isValidDate(createdAt)) {
-    opts.where[Sequelize.Op.and].push({
-      createdAt: {
-        [Sequelize.Op.and]: [
-          { [Sequelize.Op.gte]: dayFrom },
-          { [Sequelize.Op.lt]: dayTo },
-        ],
-      },
-    });
-  }
-
-  const foundBook = await Book.findAll(opts);
-
-  if (isArrayEmpty(foundBook)) {
-    return res.status(404).json();
-  }
-
-  return res.json(foundBook);
 };
 
 const create = async (req, res) => {
