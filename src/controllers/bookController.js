@@ -12,7 +12,7 @@ const find = async (req, res) => {
   const { name, category, createdAt, id } = req.query;
   const dayFrom = new Date(createdAt);
   const dayTo = new Date(dayFrom);
-  const opts = { where: { [Sequelize.Op.and]: [] } };
+  const opts = {};
   const page = parseInt(req.query.page) || 1;
   const pageSize = 5;
   const startIndex = (page - 1) * pageSize;
@@ -21,10 +21,6 @@ const find = async (req, res) => {
   dayTo.setDate(dayFrom.getDate() + 1);
 
   if (isValidID(id)) {
-    opts.where[Sequelize.Op.and].push({
-      id: id,
-    });
-
     const singleBook = await Book.findByPk(id);
     if (singleBook) {
       return res.json({
@@ -35,26 +31,20 @@ const find = async (req, res) => {
     }
   } else {
     if (isNotEmpty(name)) {
-      opts.where[Sequelize.Op.and].push({
-        name: { [Sequelize.Op.like]: `%${name}%` },
-      });
+      opts.name = { [Sequelize.Op.like]: `%${name}%` };
     }
 
     if (isNotEmpty(category)) {
-      opts.where[Sequelize.Op.and].push({
-        category: { [Sequelize.Op.like]: `%${category}%` },
-      });
+      opts.category = { [Sequelize.Op.like]: `%${category}%` };
     }
 
     if (isValidDate(createdAt)) {
-      opts.where[Sequelize.Op.and].push({
-        createdAt: {
-          [Sequelize.Op.and]: [
-            { [Sequelize.Op.gte]: dayFrom },
-            { [Sequelize.Op.lt]: dayTo },
-          ],
-        },
-      });
+      opts.createdAt = {
+        [Sequelize.Op.and]: [
+          { [Sequelize.Op.gte]: dayFrom },
+          { [Sequelize.Op.lt]: dayTo },
+        ],
+      };
     }
 
     const result = await Book.findAndCountAll({
