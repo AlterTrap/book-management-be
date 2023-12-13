@@ -21,51 +21,44 @@ const find = async (req, res) => {
   dayTo.setDate(dayFrom.getDate() + 1);
 
   if (isValidID(id)) {
-    const singleBook = await Book.findByPk(id);
-    if (singleBook) {
-      return res.json({
-        list: [singleBook],
-        currentPage: page,
-        totalPages: 1,
-      });
-    }
-  } else {
-    if (isNotEmpty(name)) {
-      opts.name = { [Sequelize.Op.like]: `%${name}%` };
-    }
-
-    if (isNotEmpty(category)) {
-      opts.category = { [Sequelize.Op.like]: `%${category}%` };
-    }
-
-    if (isValidDate(createdAt)) {
-      opts.createdAt = {
-        [Sequelize.Op.and]: [
-          { [Sequelize.Op.gte]: dayFrom },
-          { [Sequelize.Op.lt]: dayTo },
-        ],
-      };
-    }
-
-    const result = await Book.findAndCountAll({
-      where: opts,
-      limit: pageSize,
-      offset: startIndex,
-    });
-
-    if (result.count === 0) {
-      return res.status(404).json();
-    }
-
-    const { count, rows } = result;
-    const totalPages = Math.ceil(count / pageSize);
-
-    return res.json({
-      list: rows,
-      currentPage: page,
-      totalPages: totalPages,
-    });
+    opts.id = id;
   }
+
+  if (isNotEmpty(name)) {
+    opts.name = { [Sequelize.Op.like]: `%${name}%` };
+  }
+
+  if (isNotEmpty(category)) {
+    opts.category = { [Sequelize.Op.like]: `%${category}%` };
+  }
+
+  if (isValidDate(createdAt)) {
+    opts.createdAt = {
+      [Sequelize.Op.and]: [
+        { [Sequelize.Op.gte]: dayFrom },
+        { [Sequelize.Op.lt]: dayTo },
+      ],
+    };
+  }
+
+  const result = await Book.findAndCountAll({
+    where: opts,
+    limit: pageSize,
+    offset: startIndex,
+  });
+
+  if (result.count === 0) {
+    return res.status(200).json('No books found');
+  }
+
+  const { count, rows } = result;
+  const totalPages = Math.ceil(count / pageSize);
+
+  return res.json({
+    list: rows,
+    currentPage: page,
+    totalPages: totalPages,
+  });
 };
 
 const create = async (req, res) => {
