@@ -10,8 +10,6 @@ const {
 
 const find = async (req, res) => {
   const { name, category, createdAt, id } = req.query;
-  const dayFrom = new Date(createdAt);
-  const dayTo = new Date(dayFrom);
   const opts = {};
   const page = parseInt(req.query.page) || 1;
   const pageSize = 5;
@@ -30,6 +28,8 @@ const find = async (req, res) => {
   }
 
   if (isValidDate(createdAt)) {
+    const dayFrom = new Date(createdAt);
+    const dayTo = new Date(dayFrom);
     dayTo.setDate(dayFrom.getDate() + 1);
     opts.createdAt = {
       [Sequelize.Op.and]: [
