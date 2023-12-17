@@ -16,9 +16,6 @@ const find = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = 5;
   const startIndex = (page - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-
-  dayTo.setDate(dayFrom.getDate() + 1);
 
   if (isValidID(id)) {
     opts.id = id;
@@ -33,6 +30,7 @@ const find = async (req, res) => {
   }
 
   if (isValidDate(createdAt)) {
+    dayTo.setDate(dayFrom.getDate() + 1);
     opts.createdAt = {
       [Sequelize.Op.and]: [
         { [Sequelize.Op.gte]: dayFrom },
@@ -48,13 +46,15 @@ const find = async (req, res) => {
   });
 
   if (result.count === 0) {
-    return res.status(200).json('No books found');
+    return res.status(200).json({
+      list: null,
+    });
   }
 
   const { count, rows } = result;
   const totalPages = Math.ceil(count / pageSize);
 
-  return res.json({
+  return res.status(200).json({
     list: rows,
     currentPage: page,
     totalPages: totalPages,
