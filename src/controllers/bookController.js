@@ -46,7 +46,7 @@ const find = async (req, res) => {
   });
 
   if (result.count === 0) {
-    return res.status(200).json({
+    return res.json({
       list: null,
     });
   }
@@ -54,7 +54,7 @@ const find = async (req, res) => {
   const { count, rows } = result;
   const totalPages = Math.ceil(count / pageSize);
 
-  return res.status(200).json({
+  return res.json({
     list: rows,
     currentPage: page,
     totalPages: totalPages,
