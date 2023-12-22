@@ -46,7 +46,7 @@ const find = async (req, res) => {
   });
 
   if (result.count === 0) {
-    return res.status(200).json({
+    return res.json({
       list: null,
     });
   }
